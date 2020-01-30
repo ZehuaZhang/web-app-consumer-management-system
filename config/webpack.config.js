@@ -4,7 +4,7 @@ var package = require('../package.json')
 
 // variables
 var isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
-var sourcePath = path.join(__dirname, '../src')
+var sourcePath = path.join(__dirname, '../src/client')
 var outPath = path.join(__dirname, '../build')
 
 // plugins
@@ -15,7 +15,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin')
 module.exports = {
   context: sourcePath,
   entry: {
-    app: './main.tsx'
+    app: './main.client.tsx'
   },
   output: {
     path: outPath,
@@ -94,7 +94,7 @@ module.exports = {
       disable: !isProduction
     }),
     new HtmlWebpackPlugin({
-      template: 'assets/templates/index.html',
+      template: '../assets/templates/index.html',
       minify: {
         minifyJS: true,
         minifyCSS: true,
@@ -115,7 +115,7 @@ module.exports = {
   ],
   devServer: {
     contentBase: sourcePath,
-    hot: false,
+    hot: true,
     inline: true,
     historyApiFallback: {
       disableDotRule: true

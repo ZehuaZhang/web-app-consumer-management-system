@@ -5,7 +5,7 @@
 import { Request } from 'express'
 import {
   I_Buffer_Model_RequestInput
-} from '../../interfaces/controllers/buffer.interface'
+} from '../../interfaces/controllers/user.interface'
 
 
 import { Api, Query, Metadata } from '../constants.util'

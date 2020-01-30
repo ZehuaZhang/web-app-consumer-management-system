@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "es5",
+    "target": "es6",
     "jsx": "react",
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "declaration": false,
@@ -12,6 +12,7 @@
     "noUnusedLocals": false,
     "strict": true,
     "outDir": "build",
+    "allowSyntheticDefaultImports": true,
     "lib": ["es6", "es7", "dom"],
     "baseUrl": "src",
     "paths": {
