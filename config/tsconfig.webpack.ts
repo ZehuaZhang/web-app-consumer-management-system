@@ -1,0 +1,1 @@
+// This file is needed for customized typscript compilation for frontend to work

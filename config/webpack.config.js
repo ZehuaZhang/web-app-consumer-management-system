@@ -5,7 +5,7 @@ var package = require('../package.json')
 // variables
 var isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
 var sourcePath = path.join(__dirname, '../src/client')
-var outPath = path.join(__dirname, '../build')
+var outPath = path.join(__dirname, '../build/client')
 
 // plugins
 var HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -27,7 +27,7 @@ module.exports = {
     extensions: ['.js', '.ts', '.tsx'],
     mainFields: ['module', 'browser', 'main'],
     alias: {
-      app: path.resolve(__dirname, 'src/client/')
+      app: path.resolve(__dirname, '../src/client/')
     }
   },
   module: {
@@ -37,9 +37,16 @@ module.exports = {
         use: [
           !isProduction && {
             loader: 'babel-loader',
-            options: { plugins: ['react-hot-loader/babel'] }
+            options: { 
+              plugins: ['react-hot-loader/babel']
+            }
           },
-          'ts-loader'
+          {
+            loader: 'ts-loader',
+            options: {
+              configFile: path.resolve(__dirname, 'tsconfig.webpack.json')
+            }
+          }
         ].filter(Boolean)
       },
       {
