@@ -1,0 +1,17 @@
+.convoy-footer-container {
+    height: 141px;
+    width: 100%;
+    background: white;
+    position: absolute;
+    bottom: 0px;
+    z-index: 1000;
+
+    .convoy-footer-title{
+        font-family: ProximaNova-Medium;
+        font-size: 20px;
+        color: #B4BBBF;
+        letter-spacing: 0.5px;
+        text-align: center;
+        margin-top: 57px;
+    }
+}

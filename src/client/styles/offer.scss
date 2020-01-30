@@ -1,0 +1,51 @@
+.convoy-offer-container {
+    margin: 60px auto 141px auto;
+
+    .convoy-offer {
+        padding: 30px 42px;
+    }
+}
+
+.convoy-offer-detailed-container-wrapper {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .convoy-offer-detailed-container {
+        width: calc(100% + 14px);
+        overflow: hidden scroll;
+        padding-right: 15px;
+        max-height: calc(100vh - 305px);
+
+        .convoy-offer-gallery-container {
+            background: #FFFFFF;
+            border-radius: 4px;
+            margin: auto;
+            max-width: 1000px;
+        }
+
+        .convoy-offer-show-more-button {    
+            margin: 20px auto 10px auto;
+            background: #848E93;
+            border-radius: 4px;
+            font-family: ProximaNova-Bold;
+            font-size: 16px;
+            color: #FFFFFF;
+            letter-spacing: 0;
+            text-align: center;
+            line-height: 20px;
+            width: 190px;
+            display: block;
+            height: 41px;
+            cursor: pointer;
+            border: 1px solid #848E93;
+
+            &:hover {
+                transition: 0.2s;
+                background: #848e93bf;
+                border: 1px solid #848e93bf;
+            }
+        }
+    }
+}
+

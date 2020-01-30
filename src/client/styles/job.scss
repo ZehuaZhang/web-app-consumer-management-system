@@ -1,0 +1,27 @@
+.convoy-job-container {
+    margin: 60px auto 141px auto;
+
+    .convoy-job {
+        padding: 30px 42px;
+    }
+
+    .convoy-offer-detailed-container-wrapper, .convoy-job-detailed-container-wrapper{
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+
+        .convoy-offer-detailed-container, .convoy-job-detailed-container {
+            width: calc(100% + 14px);
+            overflow: hidden scroll;
+            padding-right: 15px;
+            max-height: calc(100vh - 265px);
+
+            .convoy-offer-gallery-container, .convoy-job-gallery-container {
+                background: #FFFFFF;
+                border-radius: 4px;
+                margin: auto;
+                max-width: 1000px;
+            }
+        }
+    }
+}

@@ -1,0 +1,70 @@
+.convoy-header-container {
+    height: 56px;
+    background: white;
+    position: absolute;
+    top: 0px;
+    z-index: 1000;
+    width: 100%;
+
+    .convoy-header {
+        margin: auto;
+        max-width: 1000px;
+
+        .convoy-header-title {
+            display: inline-block;
+            margin: 20px 41px;
+
+            .convoy-navigation-header.logo {
+                background-image: url(../../assets/images/Convoy_logo-white.svg);
+                background-size: 111px 16px;
+                display: block;
+                width: 111px;
+                height: 16px;
+                background-repeat: no-repeat;
+                filter: invert(1);
+            }
+        }
+
+        .convoy-navigation-container {
+            display: inline-block;
+            height: 52px;
+            vertical-align: top;
+
+            .convoy-navigation-item {
+                display: inline-block;
+                height: 52px;
+                width: 93px;
+                line-height: 56px;
+                text-align: center;
+
+                font-family: ProximaNova-Regular;
+                font-size: 18px;
+                color: #0B2127;
+                letter-spacing: 0.4px;
+
+                &.active {
+                    color: rgba(246,83,53,1);
+                    border-bottom: 4px solid rgba(246,83,53,1);
+                }
+
+                &.offer {
+                    margin-right: 5px;
+                }
+
+                &.job {
+                    margin-left: 5px;
+                }
+
+                &:hover {
+                    color:rgba(246, 82, 53, 0.8);
+                    border-bottom: 4px solid rgba(246, 82, 53, 0.8);
+                    transition: 0.2s;
+                }
+            }
+        }
+
+        a {
+            text-decoration: none;
+        }
+    }
+}

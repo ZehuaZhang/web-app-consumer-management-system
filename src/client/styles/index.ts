@@ -1,0 +1,8 @@
+import './app.scss'
+import './header.scss'
+import './offer.scss'
+import './sort.scss'
+import './footer.scss'
+import './status.scss'
+import './job.scss'
+import './offer-item.scss'
