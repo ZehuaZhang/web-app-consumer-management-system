@@ -78,6 +78,9 @@ typings/
 # mac ds_store
 .ds_store
 
+# mock db
+db/
+
 # Misc
 .vscode
 .idea

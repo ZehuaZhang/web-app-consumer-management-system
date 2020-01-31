@@ -3,23 +3,21 @@
  * 
  * This middleware is to catch all unknown errors in the code
  */
+
 import { inspect } from 'util'
-
 import { Request, Response } from 'express'
+import { INTERNAL_SERVER_ERROR } from 'http-status-codes'
+import { respondOnError } from 'server/utils/controllers/controller.util'
 
-import { respondOnErrorWithJsonApi } from '../utils/controllers/controller.util'
-
-export default function(error: any, req: Request, res: Response, next: any) {
+export default function (error: any, req: Request, res: Response, next: any) {
   console.log('Internal Server Error captured: ', error)
 
   const error500 = {
-    errors: [
-      {
-        message: 'internal server error occured',
-        detail: inspect(error)
-      }
-    ]
+    error: {
+      message: 'internal server error occured',
+      detail: inspect(error)
+    }
   }
 
-  return respondOnErrorWithJsonApi(error500, req, res)
+  return respondOnError(INTERNAL_SERVER_ERROR, error500, res)
 }

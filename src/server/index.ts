@@ -1,31 +1,32 @@
-import express from 'express'
+import * as express from 'express'
+import { DefaultDBPath } from 'server/utils/constants'
+import applyMiddlewareAndRoute from 'server/initialize/middlewares.initialize'
+import initializeRoutes from 'server/initialize/routes.initialize'
+import enableRequestLoggingWithFormat from 'server/initialize/morgan.initialize'
+import enableJsonParsingInHttpBody from 'server/initialize/json.initialize'
+import initializeStore from 'server/initialize/store.initialize'
 
-import applyMiddlewareAndRoute from './initialize/middlewares.initialize'
-import initializeRoutes from './initialize/routes.initialize'
-import enableRequestLoggingWithFormat from './initialize/morgan.initialize'
-import enableJsonParsingInHttpBody from './initialize/json.initialize'
+export function app() {
+  const app = express()
 
-export const app = express()
+  applyMiddlewareAndRoute(app,
+    enableJsonParsingInHttpBody(express.json()),
+    enableRequestLoggingWithFormat('tiny'),
+    initializeStore(DefaultDBPath),
+    initializeRoutes()
+  )
 
-applyMiddlewareAndRoute(app,
+  console.log('Initializing Porta server ...')
+  console.group()
+  const port = process.env.PORT || 4000
 
-  // apply middlewares here
-  enableJsonParsingInHttpBody(express.json({
-    type:['application/json', 'application/vnd.api+json']
-  })),
-  enableRequestLoggingWithFormat('tiny'),
+  const server = app.listen(port, () => {
+    console.groupEnd()
+    console.log(`Porta listening on port ${port}\n`)
+  })
 
-  // apply routes here
-  initializeRoutes()
-)
-
-console.log('Initializing Porta server ...')
-console.group()
-const port = process.env.PORT || 4000
-
-const server = app.listen(port, () => {
-  console.groupEnd()
-  console.log(`Porta listening on port ${port}\n`)
-})
-
-export default server
+  return {
+    app,
+    server
+  }
+}

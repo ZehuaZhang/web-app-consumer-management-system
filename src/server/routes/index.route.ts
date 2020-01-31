@@ -2,12 +2,12 @@ import { Router, Request, Response } from 'express'
 
 const router = Router()
 
-// define the home page route
+// home page
 router.get('/', (req: Request, res: Response) => {
   res.send(`Welcome to .zZehua's Epic Server!`)
 })
 
-// Manual heartbeat
+// manual heartbeat
 router.get('/ping', (req: Request, res: Response) => {
   res.send('pong')
 })

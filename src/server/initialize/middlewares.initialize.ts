@@ -5,7 +5,7 @@
  */
 
 import { Application } from 'express'
-import { I_MiddlewareHandle } from '../interfaces/initialize/initialize.interface'
+import { I_MiddlewareHandle } from '../interfaces/initialize.interface'
 
 export default function initializeMiddlewaresAndRoutes(app: Application, ...middlewares: I_MiddlewareHandle[]): void {
   console.log('Initializing middleware and routes ...')

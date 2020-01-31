@@ -1,45 +1,76 @@
 /**
- * Utility & Helper Functions for Buffer Prediction Controller
+ * Utility & Helper Functions for User Controller
  */
 
 import { Request } from 'express'
-import {
-  I_Buffer_Model_RequestInput
-} from '../../interfaces/controllers/user.interface'
+import { 
+  I_User_GetUsers_Model_Input, I_User_GetUsers_Query,
+  I_User_DeleteUser_Model_Input,
+  I_User_AddUser_Model_Input, I_User_AddUser_RequestBody,
+  I_User_UpdateUser_Model_Input, I_User_UpdateUser_RequestBody,
+  I_User_SearchUsers_Model_Input, I_User_SearchUsers_Query
+} from '../../interfaces/user.interface'
+import { userQueryToSortType, userQueryToSortOrder, UserSortType, UserSortOrder, QueryDefault } from '../constants/user.constant'
 
+export function getModelInputFromGetUsersRequest(req: Request): I_User_GetUsers_Model_Input {
+  const { sort, order, limit, offset } = req.query as I_User_GetUsers_Query
 
-import { Api, Query, Metadata } from '../constants.util'
-
-export module Constants {
-  export const DefaultModelName = 'dse-model-buffer'
-  export const DefaultModelVersion = '1.0.0'
+  return ({
+    sort: sort ? userQueryToSortType[sort.toLowerCase()] : UserSortType.ID,
+    order: order ? userQueryToSortOrder[order.toLowerCase()] : UserSortOrder.Ascending,
+    limit: limit ? parseInt(limit) : QueryDefault.limit,
+    offset: offset ?  parseInt(offset) : QueryDefault.offset
+  })
 }
 
-export function getModelInputFromRequest(req: Request): I_Buffer_Model_RequestInput {
-  const query = req.query
+export function getModelInputFromDeleteUserRequest(req: Request): I_User_DeleteUser_Model_Input {
+  const { id } = req.params
 
-  const input: I_Buffer_Model_RequestInput = getModelInputFromQuery(query)
-
-  return input
-}
-
-function getModelInputFromQuery(query: any = {}): I_Buffer_Model_RequestInput {
-
-  const input: I_Buffer_Model_RequestInput = {
-    model_class: query.model_class,
-    model_version: query.model_version,
-    include: query.include,
-    json_api: true,
-    experiment_id: query.experiment_id,
-    business_customer: query.business_customer || Query.defaultBusinessCustomer,
-    date_time: query.date_time,
-    sldp_prediction: query.sldp_prediction
+  if (!id) {
+    throw "invalid id"
   }
 
-  return input
+  return ({
+    id: parseInt(id)
+  })
 }
-module.exports.modelMetadata = {
-  name: 'Buffer Prediction Routes',
-  endpoint: `/api/buffer/${Api.version.v1}/`,
-  params: Metadata.getParams(getModelInputFromQuery()),
+
+export function getModelInputFromAddUserRequest(req: Request): I_User_AddUser_Model_Input {
+  const { username, email, dateofbirth, balance } = req.body as I_User_AddUser_RequestBody
+  return ({
+    username: username.trim(),
+    email: email.trim(),
+    dateofbirth: dateofbirth.trim(),
+    balance: parseInt(balance as any)
+  })
+}
+
+export function getModelInputFromUpdateUserRequest(req: Request): I_User_UpdateUser_Model_Input {
+  const { id } = req.params
+  const body = req.body as I_User_UpdateUser_RequestBody
+
+  if (!id) {
+    throw "invalid id"
+  }
+
+  if (body.balance) {
+    body.balance = parseInt(body.balance as any)
+  }
+
+  return ({
+    id: parseInt(id),
+    ...body
+  })
+}
+
+export function getModelInputFromSearchUserRequest(req: Request): I_User_SearchUsers_Model_Input {
+  const { term, sort, order, limit, offset } = req.query as I_User_SearchUsers_Query
+
+  return ({
+    term: term.toLowerCase().trim(),
+    sort: sort ? userQueryToSortType[sort.toLowerCase()] : UserSortType.ID,
+    order: order ? userQueryToSortOrder[order.toLowerCase()] : UserSortOrder.Ascending,
+    limit: limit ? parseInt(limit) : QueryDefault.limit,
+    offset: offset ?  parseInt(offset) : QueryDefault.offset
+  })
 }

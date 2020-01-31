@@ -1,10 +1,9 @@
-import Router from 'express'
-import controller from "../controllers/user.controller"
-import { Api } from '../utils/constants.util'
-import { Authorization } from '../middlewares/authorization.middleware'
+import { Router } from 'express'
+import { SearchController } from "../controllers/search.controller"
 
 const router = Router()
+const controller = new SearchController()
 
-router.get(`/${Api.version.v1}/`, Authorization.checkJwt, controller.getModel)
+router.get(`/`, controller.searchUsers)
 
 export default router

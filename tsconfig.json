@@ -18,8 +18,7 @@
     "paths": {
       "client/*": ["./client/*"],
       "server/*": ["./server/*"]
-    },
-    
+    }
   },
   "exclude": ["build", "node_modules"]
 }

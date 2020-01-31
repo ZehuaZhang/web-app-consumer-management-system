@@ -4,8 +4,7 @@
  * This middlware is to format the console log for http requests
  */
 
-import morgan from 'morgan'
-
+import * as morgan from 'morgan'
 import { Application } from 'express'
 
 export default function initializeMorgan(format: string) {

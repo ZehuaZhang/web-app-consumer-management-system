@@ -33,3 +33,24 @@ export function isObject(item: any): boolean {
 export function isFunction(item: any): boolean {
   return typeof item === 'function'
 }
+
+export function isEmptyObject(item: any): boolean {
+  return Object.keys(item).every(key => 
+    !item.hasOwnProperty(key)
+  )
+}
+
+export function swap<T>(itemA: T, itemB: T) {
+  console.log(itemB, itemA)
+
+  const temp = itemA
+  itemA = itemB
+  itemB = temp
+
+  console.log(itemA, itemB)
+
+  return {
+    itemA,
+    itemB
+  }
+}

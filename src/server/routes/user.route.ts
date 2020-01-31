@@ -1,9 +1,12 @@
-import Router from 'express'
-import controller from "../controllers/user.controller"
-import { Api } from '../utils/constants.util'
+import { Router } from 'express'
+import { UserController } from "../controllers/user.controller"
 
 const router = Router()
+const controller = new UserController()
 
-router.get(`/`, controller.getModel)
+router.get(`/`, controller.getUsers)
+router.post(`/`, controller.addUser)
+router.post(`/:id`, controller.updateUser)
+router.delete(`/:id`, controller.deleteUser)
 
 export default router
