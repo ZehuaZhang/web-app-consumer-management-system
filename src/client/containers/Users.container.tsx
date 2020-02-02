@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { toggleApplication } from '../actions/jobs.action'
-import { fetchOffersIfNeeded, fetchNextOffers, changeSortOrder, changeSortType } from '../actions/offers.action'
+import { fetchOffersIfNeeded, fetchNextOffers, changeSortOrder, changeSortType } from '../actions/users.action'
 import { fetchApplications } from '../actions/jobs.action'
 import { OfferItem, Sort, Status } from '../components'
 import { OfferModel } from '../models'
 import { IJobState } from '../reducers/jobs.reducer'
-import { IOfferState } from '../reducers/offers.reducer'
+import { IOfferState } from '../reducers/users.reducer'
 import { State } from '../reducers'
 
 export namespace Offers {

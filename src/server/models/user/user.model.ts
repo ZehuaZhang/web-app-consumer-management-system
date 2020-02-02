@@ -6,13 +6,14 @@ import {
   I_User_AddUser_Model_Input,
   I_User_SearchUsers_Model_Input
 } from 'server/interfaces/user.interface'
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { DefaultDBPath } from 'server/utils/constants'
 import { UserSortType, UserSortOrder } from 'server/utils/constants/user.constant'
 import { dateCompare } from 'server/utils/date.util'
 import { swap } from 'server/utils/object.util'
 import moment = require('moment')
 import { getAlphaNumericOnly } from 'server/utils/string.util'
+import { dirname } from 'path'
 
 export class UserModel {
   static index = getInitialId()
@@ -175,11 +176,23 @@ function getUserList(users: I_UserCollection) {
     }))
 }
 
-function getUserCollection(): I_UserCollection {
+function getUserCollection(path = DefaultDBPath, content?: object): I_UserCollection {
+  initializeUserStore(path, content || {})
+
   const usersText = readFileSync(DefaultDBPath, 'utf8')
   const users = JSON.parse(usersText)
 
   return users
+}
+
+function initializeUserStore(path: string, content: object) {
+  const contentText = JSON.stringify(content, null, 2)
+  const directory = dirname(path)
+
+  if (!existsSync(path)) {
+    mkdirSync(directory, { recursive: true })
+    writeFileSync(path, contentText)
+  }
 }
 
 function writeUserCollection(users: I_UserCollection) {

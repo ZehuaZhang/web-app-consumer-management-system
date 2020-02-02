@@ -1,2 +1,1 @@
-export * from './OfferModel'
-export * from './JobModel'
+export * from './UserModel'

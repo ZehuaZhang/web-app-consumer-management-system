@@ -1,15 +1,12 @@
 import { combineReducers } from 'redux'
-import offers, { IOfferState } from './offers.reducer'
-import jobs, { IJobState } from './jobs.reducer'
+import users, { IUserState } from './users.reducer'
 
 export interface State {
-  offers: IOfferState,
-  jobs: IJobState
+  users: IUserState
 }
 
 export const reducer = combineReducers<State>({
-  offers,
-  jobs
+  users,
 })
 
 

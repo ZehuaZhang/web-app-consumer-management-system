@@ -1,4 +1,4 @@
-export interface OfferModel {
+export interface UserModel {
   offer: number,
   miles: number,
   origin: {
@@ -19,7 +19,7 @@ export interface OfferModel {
   }
 }
 
-export namespace OfferModel {
+export namespace UserModel {
   export enum SortType {
     PickupDate = 'Pickup Date',
     DropoffDate = 'Dropoff Date',

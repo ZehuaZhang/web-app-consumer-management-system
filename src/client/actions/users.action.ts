@@ -1,13 +1,13 @@
 import { get } from 'superagent'
-import { OfferModel } from '../models'
+import { UserModel } from '../models'
 import { State } from '../reducers'
-import { IOfferState } from '../reducers/offers.reducer'
+import { IUserState } from '../reducers/users.reducer'
 
 export module ActionName {
-  export const RequestOffers = 'Request Offers'
-  export const ReceiveOffers = 'Receive Offers'
-  export const RevertOffersOnFailedRequests = 'Revert Offers on Failed Request'
-  export const RetryOfferRequest = 'Retry Offer Request'
+  export const RequestUsers = 'Request Users'
+  export const ReceiveUsers = 'Receive Users'
+  export const RevertUsersOnFailedRequests = 'Revert Users on Failed Request'
+  export const RetryUserRequest = 'Retry User Request'
   export const ChangeSortType = 'Change Sort Type'
   export const ChangeSortOrder = 'Change Sort Order'
 }
@@ -23,30 +23,30 @@ export interface IAction {
   // to be enriched
 }
 
-function requestOffers(sortType: OfferModel.SortType, sortOrder: OfferModel.SortOrder) {
-  const requestStatus = OfferModel.RequestStatus.Loading
+function requestUsers(sortType: UserModel.SortType, sortOrder: UserModel.SortOrder) {
+  const requestStatus = UserModel.RequestStatus.Loading
   return {
-    type: ActionName.RequestOffers,
+    type: ActionName.RequestUsers,
     sortType,
     sortOrder,
     requestStatus
   }
 }
 
-function receiveOffers(newItems: OfferModel[], items: OfferModel[], offset: number) {
-  const completeOfferItems = transformOffers(items.concat(newItems))
-  const requestStatus = OfferModel.RequestStatus.Completed
+function receiveUsers(newItems: UserModel[], items: UserModel[], offset: number) {
+  const completeUserItems = transformUsers(items.concat(newItems))
+  const requestStatus = UserModel.RequestStatus.Completed
 
   return {
-    type: ActionName.ReceiveOffers,
-    items: completeOfferItems,
+    type: ActionName.ReceiveUsers,
+    items: completeUserItems,
     offset,
     receivedAt: Date.now(),
     requestStatus
   }
 }
 
-function transformOffers(items: OfferModel[]) {
+function transformUsers(items: OfferModel[]) {
   const set = new Set()
 
   return (items || []).filter(item => {

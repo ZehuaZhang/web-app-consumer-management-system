@@ -4,7 +4,6 @@ import applyMiddlewareAndRoute from 'server/initialize/middlewares.initialize'
 import initializeRoutes from 'server/initialize/routes.initialize'
 import enableRequestLoggingWithFormat from 'server/initialize/morgan.initialize'
 import enableJsonParsingInHttpBody from 'server/initialize/json.initialize'
-import initializeStore from 'server/initialize/store.initialize'
 
 export function app() {
   const app = express()
@@ -12,7 +11,6 @@ export function app() {
   applyMiddlewareAndRoute(app,
     enableJsonParsingInHttpBody(express.json()),
     enableRequestLoggingWithFormat('tiny'),
-    initializeStore(DefaultDBPath),
     initializeRoutes()
   )
 

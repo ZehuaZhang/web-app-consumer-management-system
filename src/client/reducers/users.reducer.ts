@@ -1,25 +1,25 @@
-import { ActionName, IAction } from '../actions/offers.action'
-import { OfferModel } from '../models'
+import { ActionName, IAction } from '../actions/users.action'
+import { UserModel } from '../models'
 
-export interface IOfferState {
-  items: OfferModel[]
-  requestStatus: OfferModel.RequestStatus
-  sortType: OfferModel.SortType
-  sortOrder: OfferModel.SortOrder
+export interface IUserState {
+  items: UserModel[]
+  requestStatus: UserModel.RequestStatus
+  sortType: UserModel.SortType
+  sortOrder: UserModel.SortOrder
   receivedAt: string
   offset: number
 }
 
-const initialState: IOfferState = {
+const initialState: IUserState = {
   items: [],
-  requestStatus: OfferModel.RequestStatus.NA,
-  sortType: OfferModel.SortType.PickupDate,
-  sortOrder: OfferModel.SortOrder.Descending,
+  requestStatus: UserModel.RequestStatus.NA,
+  sortType: UserModel.SortType.PickupDate,
+  sortOrder: UserModel.SortOrder.Descending,
   offset: 0,
   receivedAt: ''
 }
 
-const offers = (state = initialState, action: IAction) => {
+const users = (state = initialState, action: IAction) => {
   switch (action.type) {
     case ActionName.ReceiveOffers:
       return {
