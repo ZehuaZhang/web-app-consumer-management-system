@@ -1,17 +1,23 @@
 .epic-footer-container {
-    height: 141px;
+    height: 100px;
     width: 100%;
-    background: white;
+    background: #2a2a2a;
     position: absolute;
     bottom: 0px;
     z-index: 1000;
 
     .epic-footer-title{
-        font-family: ProximaNova-Medium;
+        font-family: OpenSans,sans-serif,arial;
         font-size: 20px;
-        color: #B4BBBF;
+        color: #b0b4b4;
         letter-spacing: 0.5px;
         text-align: center;
-        margin-top: 57px;
+        margin-top: 26px;
+        cursor: context-menu;
+
+        &:hover, &:focus {
+            color: white;
+            transition: 0.2s;
+        }
     }
 }

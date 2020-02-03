@@ -1,13 +1,15 @@
 .sort-container {
-    height: 52px;
-    margin: 0px auto 10px auto;
+    height: 70px;
+    margin: 20px auto 10px auto;
     max-width: 1000px;
     
-
     .sort-content {
         display: table;
         width: calc(100% - 40px);
         padding: 20px;
+
+        font-family: Brutal,sans-serif;
+        color: #b0b4b4;
  
         div {
             display: table-cell;
@@ -25,6 +27,11 @@
                 height: 20px;
                 position: absolute;
                 margin-left: 20px;
+            }
+
+            &:hover, &:focus {
+                color: white;
+                transition: 0.2s;
             }
         }
 

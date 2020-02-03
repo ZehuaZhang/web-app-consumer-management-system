@@ -1,0 +1,18 @@
+.epic-add-user{
+    position: relative;
+    top: -55px;
+    z-index: 1001;
+    left: calc(50% + 210px);
+    border: none;
+    background: none;
+    font-size: 40px;
+    font-weight: bold;
+    color: #b0b4b4;
+
+    &:focus, &:hover {
+        transition: 0.2s;
+        color: white;
+        cursor: pointer;
+        outline: none;
+    }
+}

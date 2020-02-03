@@ -77,7 +77,7 @@ class Users extends React.Component<Users.Props, Users.State> {
           />
         </div>
         <button className='epic-add-user' onClick={() => this.handleClickOnAddUser()}>
-          ➕
+          +
         </button>
         <div className="epic-user">
           <Sort

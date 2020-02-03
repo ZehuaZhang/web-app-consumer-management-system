@@ -2,7 +2,8 @@
     margin: 60px auto 141px auto;
 
     .epic-user {
-        padding: 30px 42px;
+        padding: 0px 42px;
+        margin-top: -52px;  
     }
 }
 
@@ -18,7 +19,6 @@
         max-height: calc(100vh - 305px);
 
         .epic-user-gallery-container {
-            background: #FFFFFF;
             border-radius: 4px;
             margin: auto;
             max-width: 1000px;
@@ -26,11 +26,11 @@
 
         .epic-user-show-more-button {    
             margin: 20px auto 10px auto;
-            background: #848E93;
+            background: #252525;
             border-radius: 4px;
-            font-family: ProximaNova-Bold;
+            font-family: Brutal,sans-serif;
             font-size: 16px;
-            color: #FFFFFF;
+            color: #b0b4b4;
             letter-spacing: 0;
             text-align: center;
             line-height: 20px;
@@ -38,12 +38,13 @@
             display: block;
             height: 41px;
             cursor: pointer;
-            border: 1px solid #848E93;
+            border: none;
+            outline: none;
 
             &:hover {
                 transition: 0.2s;
-                background: #848e93bf;
-                border: 1px solid #848e93bf;
+                background: #383838;
+                color: white;
             }
         }
     }

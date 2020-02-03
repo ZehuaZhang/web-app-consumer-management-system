@@ -150,9 +150,7 @@ export class NewUserItem extends React.Component<NewUserItem.Props, NewUserItem.
     return (
       <div className='new user-item-container'>
         <div className='new user-item-content'>
-          <button className='new user-submit-button' onClick={() => this.onClickSubmitButton()}>
-            ✔
-          </button>
+          
           <input
             className='new user-item-username'
             value={username}
@@ -181,6 +179,9 @@ export class NewUserItem extends React.Component<NewUserItem.Props, NewUserItem.
             onKeyDown={event => this.onKeyDown(event)}
             ref={this.BalanceReference}
           />
+          <button className='new user-submit-button' onClick={() => this.onClickSubmitButton()}>
+            ✔
+          </button>
           <button className='new user-hide-button' onClick={() => hideNewUserItem()}>
             ✖
           </button>

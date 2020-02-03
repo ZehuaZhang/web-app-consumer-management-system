@@ -1,14 +1,16 @@
-# Epic Frontend
+# Epic
 
-Designed Epic User and My Job Page
-
-For applications, clicking an user or a job directly applied to, or cancelled from My Jobs, since we don't really have api to call. Applications persist when reopeninig the browser via local storage.
-
-User fetch count is guaranteed to be exact 3 users for following 3 cases, i.e. initial rendering, clicking Show More, & choosing Sorting Type. User fetch would retry 3 times when server errors occur. Fetch status are added to Footer to show status of the fetch, i.e. Not Started, Loading, Retrying, Completed, Failed.
-
-Main app is designed with hidden scroll bar, and would scroll to top when a new sorting, i.e. either sort type or sort order is clicked. Animations and transitions added on all user interactions. Header, Footer, 2 Sortings components are sticky.
-
-Designed with Redux and Hot Reload for easy debugging
+- [x] Designed Epic CMS, Frontend & Backend
+- [x] Enabled User Add, Delete, Update, Get
+- [x] Enabled User Wallet - Balance
+- [x] Enabled User Last Modified Timestamp
+- [x] Enabled Search on Username & Email
+- [x] Enabled Sort By Username, Email, ID, Balance, Date of Birth, Last Modified Timestamp
+- [x] Enabled Exhaustive Input Verification and Parsing
+- [x] Enabled Unique Username & Email
+- [x] Enabled Fetch Page Offset & Limit
+- [x] Enabled Status Bar - Loading, Retrying, Successful, Failed
+- [x] Concise Design, and Slick Animations
 
 ## How tos
 
@@ -18,22 +20,16 @@ Designed with Redux and Hot Reload for easy debugging
 $ yarn
 ```
 
-### Run
+### Run Client
 
 ```
-$ yarn start
+$ yarn client
 ```
 
-### Run in Local
+### Run Server
 
 ```
-$ yarn open
-```
-
-### Build
-
-```
-$ yarn build
+$ yarn server
 ```
 
 ## Libraries Applied
@@ -56,10 +52,10 @@ $ yarn build
 - [x] [HTML Webpack Plugin](https://github.com/ampedandwired/html-webpack-plugin)
 
 ## To dos
-- [x] Create a server to cosume upstream API, and save user information, recent activity, save jobs with a persist storage, redis / DB
+
 - [x] Server-Side Rendering
 - [x] Static code analysis
 - [x] Testing Frameworks
-- [x] Local Storage compliance to GDPR, and reduce Xxs attack
+- [x] Connect tp Real DB
 - [x] Accessiblity - Keyboard focus via tabs, and outline with contrast on focus
 - [x] Accessiblity - Focused or Hovered items should be able to narrate

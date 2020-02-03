@@ -56,7 +56,7 @@ export class Search extends React.Component<Search.Props, Search.State> {
     return (
       <div className='search-container'>
         <div className='search-content'>
-          <input className='search-input' value={term} onChange={event => this.onChange(event)} />
+          <input placeholder='Search' className='search-input' value={term} onChange={event => this.onChange(event)} />
           {
             term &&
             <button className='search-clear-input-button' onClick={() => this.onClickClearInputButton()}>

@@ -1,0 +1,42 @@
+.new.user-item-container {
+    .user-item-content {
+        margin-top: -4px;
+
+        input:first-of-type {
+            margin-left: 4.5%;
+        }
+
+        input {
+            border: 2px solid #555454;
+            width: calc(21% - 10px);
+            margin: 5px;
+            color: #b0b4b4;
+
+            &:focus, &:hover {
+                transition: 0.2s;
+                color: white;
+            }
+        }
+
+        .user-item-dateofbirth {
+            width:  calc(12% - 10px);
+        }
+
+        .user-submit-button, .user-hide-button {
+            margin: 0px;
+            float: unset;
+            display: table-cell;
+            color: #b0b4b4;
+            width: 6%;
+
+            &:focus, &:hover {
+                transition: 0.2s;
+                color: white;
+            }
+        }
+
+        .user-submit-button {
+            margin-left: 4%;
+        }
+    }
+}

@@ -8,11 +8,17 @@
     margin: auto;
     div {
         text-align: center;
-        font-family: ProximaNova-Regular;
+        font-family: Brutal,sans-serif;
         font-size: 16px;
-        color: #7F8D99;
+        color: #b0b4b4;
         letter-spacing: 0.4px;
         line-height: 20px;
+        cursor: context-menu;
+
+        &:hover, &:focus {
+            color: white;
+            transition: 0.2s;
+        }
 
         span {
             display: inline-block;
