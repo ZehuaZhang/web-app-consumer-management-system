@@ -13,11 +13,8 @@ export interface IAction {
 }
 
 export function changeSearchTerm(term: string) {
-  if (!isString(term) || !term.trim()) {
-    return
-  }
-  return {
+  return ({
     type: ActionName.ChangeSearchTerm,
     term
-  }
+  })
 }

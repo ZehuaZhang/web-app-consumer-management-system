@@ -51,6 +51,20 @@ const users = (state = initialState, action: IAction) => {
         receivedAt: action.receivedAt,
         requestStatus: action.requestStatus
       }
+    case ActionName.AddUser:
+      return {
+        ...state,
+        items: [action.user].concat(state.items),
+        receivedAt: action.receivedAt,
+        requestStatus: action.requestStatus
+      }
+    case ActionName.DeleteUser:
+      return {
+        ...state,
+        items: state.items.filter(item => item.id !== action.id),
+        receivedAt: action.receivedAt,
+        requestStatus: action.requestStatus
+      }
     case ActionName.RetryUserRequest:
       return {
         ...state,
@@ -63,7 +77,7 @@ const users = (state = initialState, action: IAction) => {
         sortOrder: action.sortOrder,
         requestStatus: action.requestStatus
       }
-    case ActionName.UpdateUserFailed:
+    case ActionName.FailedRequests:
       return {
         ...state,
         requestStatus: action.requestStatus

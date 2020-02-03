@@ -56,6 +56,11 @@ export interface I_User_AddUser_RequestBody {
   balance: number
 }
 
+export interface I_User_AddUser_Response {
+  id: number
+  lastmodified: number
+}
+
 export interface I_User_AddUser_Model_Input extends I_User_AddUser_RequestBody {
 }
 

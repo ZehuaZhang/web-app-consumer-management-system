@@ -1,5 +1,5 @@
-import { get, post, delete as deleteRequest } from 'superagent'
-import { I_UserModel, UserModel, UserUpdateData, UserUpdateReducerData } from 'client/models'
+import { get, post, del } from 'superagent'
+import { I_UserModel, UserModel, UserUpdateData, UserUpdateReducerData, UserAddData } from 'client/models'
 import { State } from 'client/reducers'
 import { IUserState } from 'client/reducers/users.reducer'
 
@@ -7,13 +7,20 @@ interface I_User_UpdateUser_Response {
   lastmodified: number
 }
 
+interface I_User_AddUser_Response {
+  id: number
+  lastmodified: number
+}
+
 export module ActionName {
   export const RequestUsers = 'Request Users'
   export const ReceiveUsers = 'Receive Users'
   export const UpdateUser = 'Update User'
+  export const DeleteUser = 'Delete User'
+  export const AddUser = 'Add User'
   export const RevertUsersOnFailedRequests = 'Revert Users on Failed Request'
   export const RetryUserRequest = 'Retry User Request'
-  export const UpdateUserFailed = 'Update User Failed'
+  export const FailedRequests = 'Failed Requests'
 }
 
 namespace Constants {
@@ -22,6 +29,8 @@ namespace Constants {
   export const UserEndpoint = `http://localhost:4000/api/users?limit=${LimitApiQuery}`
   export const SearchEndpoint = `http://localhost:4000/api/search?limit=${LimitApiQuery}`
   export const UpdateUserEndpoint = `http://localhost:4000/api/users/`
+  export const DeleteUserEndpoint = `http://localhost:4000/api/users/`
+  export const AddUserEndpoint = `http://localhost:4000/api/users/`
 }
 
 export interface IAction {
@@ -30,55 +39,73 @@ export interface IAction {
 }
 
 function requestUsers(sortType: UserModel.SortType, sortOrder: UserModel.SortOrder) {
-  return {
+  return ({
     type: ActionName.RequestUsers,
     sortType,
     sortOrder,
     requestStatus: UserModel.RequestStatus.Loading
-  }
+  })
 }
 
 function receiveUsers(newItems: I_UserModel[], items: I_UserModel[], offset: number) {
-  return {
+  return ({
     type: ActionName.ReceiveUsers,
     items: items.concat(newItems),
     offset,
     receivedAt: Date.now(),
     requestStatus: UserModel.RequestStatus.Completed
-  }
+  })
 }
 
 function updateUser(id: number, updateBody: UserUpdateReducerData) {
-  return {
+  return ({
     type: ActionName.UpdateUser,
     id,
     updateBody,
     receivedAt: Date.now(),
     requestStatus: UserModel.RequestStatus.Completed
-  }
+  })
+}
+
+function deleteUser(id: number) {
+  return ({
+    type: ActionName.DeleteUser,
+    id,
+    receivedAt: Date.now(),
+    requestStatus: UserModel.RequestStatus.Completed
+  })
+}
+
+function addUser(user: I_UserModel) {
+  return ({
+    type: ActionName.AddUser,
+    user,
+    receivedAt: Date.now(),
+    requestStatus: UserModel.RequestStatus.Completed
+  })
 }
 
 function revertUsersOnFailedRequests(sortType: UserModel.SortType, sortOrder: UserModel.SortOrder) {
-  return {
+  return ({
     type: ActionName.RevertUsersOnFailedRequests,
     sortType,
     sortOrder,
     requestStatus: UserModel.RequestStatus.Failed
-  }
+  })
 }
 
-function updateUserFailed() {
-  return {
-    type: ActionName.UpdateUserFailed,
+function setFailedRequest() {
+  return ({
+    type: ActionName.FailedRequests,
     requestStatus: UserModel.RequestStatus.Failed
-  }
+  })
 }
 
 function retryUserRequest() {
-  return {
+  return ({
     type: ActionName.RetryUserRequest,
     requestStatus: UserModel.RequestStatus.Retrying
-  }
+  })
 }
 
 export function fetchUsers(sortType?: UserModel.SortType, sortOrder?: UserModel.SortOrder) {
@@ -160,7 +187,45 @@ export function fetchUpdateUser(id: number, updateBody: UserUpdateData) {
       .catch(error => {
         const { message } = error.response.body
         console.error('Error on fetchUpdateUser', error.response.body)
-        dispatch(updateUserFailed())
+        dispatch(setFailedRequest())
+        throw message
+      })
+  }
+}
+
+export function fetchAddUser(addBody: UserAddData) {
+  return (dispatch: Function, getState: () => State) => {
+    const endpoint = Constants.AddUserEndpoint
+
+    return post(endpoint)
+      .send({ ...addBody })
+      .retry(Constants.maxRetryCount, () => dispatch(retryUserRequest()))
+      .then(response => {
+        const { id, lastmodified } = response.body as I_User_AddUser_Response
+        dispatch(addUser({ ...addBody, id, lastmodified }))
+      })
+      .catch(error => {
+        const { message } = error.response.body
+        console.error('Error on fetchAddUser', error.response.body)
+        dispatch(setFailedRequest())
+        throw message
+      })
+  }
+}
+
+export function fetchDeleteUser(id: number) {
+  return (dispatch: Function, getState: () => State) => {
+    const endpoint = Constants.DeleteUserEndpoint + id
+
+    return del(endpoint)
+      .retry(Constants.maxRetryCount, () => dispatch(retryUserRequest()))
+      .then(() => {
+        dispatch(deleteUser(id))
+      })
+      .catch(error => {
+        const { message } = error.response.body
+        console.error('Error on fetchDeleteUser', error.response.body)
+        dispatch(setFailedRequest())
         throw message
       })
   }

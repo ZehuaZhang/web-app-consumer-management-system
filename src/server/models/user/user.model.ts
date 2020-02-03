@@ -59,15 +59,18 @@ export class UserModel {
       user.username !== input.username?.toLowerCase() &&
       user.email !== input.email?.toLowerCase()))) {
 
-      users[UserModel.index++] = {
+      const lastmodified = moment.now()
+      const id = UserModel.index++
+
+      users[id] = {
         ...input,
-        lastmodified: moment.now()
+        lastmodified
       }
       writeUserCollection(users)
-      return Promise.resolve(true)
+      return Promise.resolve({ id, lastmodified })
     }
 
-    return  Promise.reject({
+    return Promise.reject({
       status: BAD_REQUEST,
       message: "Username and Email must be unique"
     })
@@ -94,10 +97,10 @@ export class UserModel {
         lastmodified
       }
       writeUserCollection(users)
-      return Promise.resolve({lastmodified})
+      return Promise.resolve({ lastmodified })
     }
 
-    return  Promise.reject({
+    return Promise.reject({
       status: BAD_REQUEST,
       message: "Username and Email must be unique"
     })

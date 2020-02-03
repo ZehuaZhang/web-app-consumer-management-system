@@ -8,7 +8,7 @@ import {
   getModelInputFromAddUserRequest,
   getModelInputFromUpdateUserRequest
 } from 'server/utils/controllers/user.util'
-import { I_User, I_User_UpdateUser_Response } from 'server/interfaces/user.interface'
+import { I_User, I_User_UpdateUser_Response, I_User_AddUser_Response } from 'server/interfaces/user.interface'
 
 export class UserController {
   private model: UserModel
@@ -45,7 +45,7 @@ export class UserController {
     const input = getModelInputFromAddUserRequest(req)
 
     this.model.addUser(input)
-      .then((response: boolean) => {
+      .then((response: I_User_AddUser_Response) => {
         respondOnSuccess(CREATED, response, res)
       })
       .catch(error => respondOnError(BAD_REQUEST, error, res))

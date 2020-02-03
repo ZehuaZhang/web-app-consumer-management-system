@@ -41,7 +41,7 @@ export function getModelInputFromAddUserRequest(req: Request): I_User_AddUser_Mo
     username: username.trim(),
     email: email.trim(),
     dateofbirth: parseInt(dateofbirth as any),
-    balance: parseInt(balance as any)
+    balance: parseFloat(balance as any)
   })
 }
 
@@ -62,7 +62,7 @@ export function getModelInputFromUpdateUserRequest(req: Request): I_User_UpdateU
   }
 
   if (body.balance) {
-    body.balance = parseInt(body.balance as any)
+    body.balance = parseFloat(body.balance as any)
   }
 
   return ({

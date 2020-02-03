@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { I_UserModel, UserUpdateData } from '../models'
-import { numberUtil, dateUtil } from '../utils'
+import { I_UserModel, UserUpdateData } from 'client/models'
+import { numberUtil, dateUtil, stringUtil } from 'client/utils'
 
 export namespace UserItem {
   export interface Props {
     user: I_UserModel
     fetchUpdateUser: (id: number, updateBody: UserUpdateData) => Promise<void>
+    fetchDeleteUser: (id: number) => void
   }
 
   export interface State extends I_UserModel {
@@ -44,6 +45,8 @@ export class UserItem extends React.Component<UserItem.Props> {
           .catch(error => {
             this.reportCustomError(target, username, error)
           })
+      } else {
+        this.updateInput(target, trimmedValue)
       }
     } else {
       this.reportCustomError(target, username, "User Name should be of length [3, 10]")
@@ -57,7 +60,7 @@ export class UserItem extends React.Component<UserItem.Props> {
     const { email } = user
 
     const trimmedValue = (value || '').trim().toLowerCase()
-    if (trimmedValue && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+    if (trimmedValue && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(trimmedValue)) {
       if (trimmedValue !== email) {
         fetchUpdateUser(user.id, { email: trimmedValue })
           .then(() => {
@@ -66,6 +69,8 @@ export class UserItem extends React.Component<UserItem.Props> {
           .catch(error => {
             this.reportCustomError(target, email, error)
           })
+      } else {
+        this.updateInput(target, trimmedValue)
       }
     } else {
       this.reportCustomError(target, email, "Email should be a valid address")
@@ -78,7 +83,14 @@ export class UserItem extends React.Component<UserItem.Props> {
     const { user, fetchUpdateUser } = this.props
     const { dateofbirth } = user
 
-    if (value && dateUtil.isValidDate(value)) {
+    const isValidDateOfBirth = (value: string) => {
+      return (
+        value.split(/\W/).filter(word => word).length === 3 &&
+        dateUtil.isValidDate(value)
+      )
+    }
+
+    if (value && isValidDateOfBirth(value)) {
       const trimmedValue = dateUtil.toEpochTime(value)
       if (trimmedValue !== dateofbirth) {
         fetchUpdateUser(user.id, { dateofbirth: trimmedValue })
@@ -88,6 +100,8 @@ export class UserItem extends React.Component<UserItem.Props> {
           .catch(error => {
             this.reportCustomError(target, this.formatDateOfBirth(dateofbirth), error)
           })
+      } else {
+        this.updateInput(target, this.formatDateOfBirth(dateofbirth))
       }
     } else {
       this.reportCustomError(target, this.formatDateOfBirth(dateofbirth), "Date of Birth should be a valid date")
@@ -100,8 +114,8 @@ export class UserItem extends React.Component<UserItem.Props> {
     const { user, fetchUpdateUser } = this.props
     const { balance } = user
 
-    const trimmedValue = parseInt(value)
-    if (value && isNaN(trimmedValue)) {
+    const trimmedValue = parseFloat(stringUtil.getNumericOnly(value))
+    if (trimmedValue && !isNaN(trimmedValue)) {
       if (trimmedValue !== balance) {
         fetchUpdateUser(user.id, { balance: trimmedValue })
           .then(() => {
@@ -110,6 +124,8 @@ export class UserItem extends React.Component<UserItem.Props> {
           .catch(error => {
             this.reportCustomError(target, this.formatBalance(balance), error)
           })
+      } else {
+        this.updateInput(target, this.formatBalance(balance))
       }
     } else {
       this.reportCustomError(target, this.formatBalance(balance), "Balance should be a valid number")
@@ -140,7 +156,8 @@ export class UserItem extends React.Component<UserItem.Props> {
   }
 
   render() {
-    const { id, username, email, dateofbirth, lastmodified, balance } = this.props.user
+    const { user, fetchDeleteUser } = this.props
+    const { id, username, email, dateofbirth, lastmodified, balance } = user
 
     return (
       <div className='user-item-container'>
@@ -170,6 +187,9 @@ export class UserItem extends React.Component<UserItem.Props> {
           />
           <div className='user-item-lastmodified'>{this.formatLastModified(lastmodified)}</div>
         </div>
+        <button className='user-delete-button' onClick={() => fetchDeleteUser(user.id)}>
+          ⓧ
+        </button>
       </div >
     )
   }

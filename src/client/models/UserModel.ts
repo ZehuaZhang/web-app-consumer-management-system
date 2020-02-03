@@ -14,6 +14,13 @@ export interface UserUpdateData {
   balance?: number
 }
 
+export interface UserAddData {
+  username: string,
+  dateofbirth: number,
+  email: string,
+  balance: number
+}
+
 export interface UserUpdateReducerData extends UserUpdateData {
   lastmodified: number
 }
