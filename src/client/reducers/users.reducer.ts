@@ -1,8 +1,8 @@
 import { ActionName, IAction } from '../actions/users.action'
-import { UserModel } from '../models'
+import { UserModel, I_UserModel } from '../models'
 
 export interface IUserState {
-  items: UserModel[]
+  items: I_UserModel[]
   requestStatus: UserModel.RequestStatus
   sortType: UserModel.SortType
   sortOrder: UserModel.SortOrder
@@ -13,15 +13,15 @@ export interface IUserState {
 const initialState: IUserState = {
   items: [],
   requestStatus: UserModel.RequestStatus.NA,
-  sortType: UserModel.SortType.PickupDate,
-  sortOrder: UserModel.SortOrder.Descending,
+  sortType: UserModel.SortType.ID,
+  sortOrder: UserModel.SortOrder.Ascending,
   offset: 0,
   receivedAt: ''
 }
 
 const users = (state = initialState, action: IAction) => {
   switch (action.type) {
-    case ActionName.ReceiveOffers:
+    case ActionName.ReceiveUsers:
       return {
         ...state,
         items: action.items,
@@ -29,38 +29,48 @@ const users = (state = initialState, action: IAction) => {
         receivedAt: action.receivedAt,
         requestStatus: action.requestStatus
       }
-    case ActionName.RequestOffers:
+    case ActionName.RequestUsers:
       return {
         ...state,
         sortType: action.sortType,
         sortOrder: action.sortOrder,
         requestStatus: action.requestStatus
       }
-    case ActionName.RetryOfferRequest:
+    case ActionName.UpdateUser:
+      return {
+        ...state,
+        items: state.items.map(item => {
+          if (item.id === action.id) {
+            return ({
+              ...item,
+              ...action.updateBody
+            })
+          }
+          return item
+        }),
+        receivedAt: action.receivedAt,
+        requestStatus: action.requestStatus
+      }
+    case ActionName.RetryUserRequest:
       return {
         ...state,
         requestStatus: action.requestStatus
       }
-    case ActionName.RevertOffersOnFailedRequests:
+    case ActionName.RevertUsersOnFailedRequests:
       return {
         ...state,
         sortType: action.sortType,
         sortOrder: action.sortOrder,
         requestStatus: action.requestStatus
       }
-    case ActionName.ChangeSortType:
+    case ActionName.UpdateUserFailed:
       return {
         ...state,
-        sortType: action.sortType
-      }
-    case ActionName.ChangeSortOrder:
-      return {
-        ...state,
-        sortOrder: action.sortOrder
+        requestStatus: action.requestStatus
       }
     default:
       return state
   }
 }
 
-export default offers
+export default users

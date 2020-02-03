@@ -6,7 +6,7 @@ export interface I_User extends I_UserCollectionData {
 
 export interface I_UserCollectionData {
   username: string
-  dateofbirth: string
+  dateofbirth: number
   email: string
   lastmodified: number
   balance: number
@@ -36,7 +36,7 @@ export interface I_User_DeleteUser_Model_Input {
 
 export interface I_User_UpdateUser_RequestBody {
   username?: string
-  dateofbirth?: string
+  dateofbirth?: number
   email?: string
   balance?: number
 }
@@ -45,9 +45,13 @@ export interface I_User_UpdateUser_Model_Input extends I_User_UpdateUser_Request
   id: number
 }
 
+export interface I_User_UpdateUser_Response {
+  lastmodified: number
+}
+
 export interface I_User_AddUser_RequestBody {
   username: string
-  dateofbirth: string
+  dateofbirth: number
   email: string
   balance: number
 }

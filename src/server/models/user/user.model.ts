@@ -14,6 +14,7 @@ import { swap } from 'server/utils/object.util'
 import moment = require('moment')
 import { getAlphaNumericOnly } from 'server/utils/string.util'
 import { dirname } from 'path'
+import { BAD_REQUEST } from 'http-status-codes'
 
 export class UserModel {
   static index = getInitialId()
@@ -66,7 +67,10 @@ export class UserModel {
       return Promise.resolve(true)
     }
 
-    return Promise.resolve(false)
+    return  Promise.reject({
+      status: BAD_REQUEST,
+      message: "Username and Email must be unique"
+    })
   }
 
   updateUser(input: I_User_UpdateUser_Model_Input) {
@@ -82,17 +86,21 @@ export class UserModel {
           user.email !== input.email?.toLowerCase()
         )))
     ) {
+      const lastmodified = moment.now()
       delete input.id
       users[id] = {
         ...users[id],
         ...input,
-        lastmodified: moment.now()
+        lastmodified
       }
       writeUserCollection(users)
-      return Promise.resolve(true)
+      return Promise.resolve({lastmodified})
     }
 
-    return Promise.resolve(false)
+    return  Promise.reject({
+      status: BAD_REQUEST,
+      message: "Username and Email must be unique"
+    })
   }
 
   searchUsers(input: I_User_SearchUsers_Model_Input) {
@@ -200,7 +208,6 @@ function writeUserCollection(users: I_UserCollection) {
 }
 
 function getCompareItems<T>(itemA: T, itemB: T, order: UserSortOrder) {
-  console.log(order, UserSortOrder.Descending)
   if (order === UserSortOrder.Descending) {
     return swap(itemA, itemB)
   }

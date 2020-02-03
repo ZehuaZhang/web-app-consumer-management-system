@@ -1,78 +1,62 @@
 import * as React from 'react'
-import { OfferModel } from '../models'
+import { UserModel } from '../models'
 
 export namespace Sort {
   export interface Props {
-    sortType: OfferModel.SortType
-    sortOrder: OfferModel.SortOrder
-    convoyOfferDetailReference: React.RefObject<HTMLDivElement>
-    changeSortType: (sortType: OfferModel.SortType) => void
-    changeSortOrder: (sortOrder: OfferModel.SortOrder) => void
-    fetchOffersIfNeeded: (shouldForceUpdate: boolean) => void
+    sortType: UserModel.SortType
+    sortOrder: UserModel.SortOrder
+    epicUserDetailReference: React.RefObject<HTMLDivElement>
+    fetchUsers: (sortType?: UserModel.SortType, sortOrder?: UserModel.SortOrder) => void
   }
 }
 
-type A = OfferModel.SortOrder
-
 export class Sort extends React.Component<Sort.Props> {
-  handleClickOnDropdown(target: HTMLSelectElement) {
-    const { changeSortType, fetchOffersIfNeeded, convoyOfferDetailReference } = this.props
+  handleClickOnSortItem(sortType: UserModel.SortType) {
+    const { fetchUsers, sortOrder, epicUserDetailReference } = this.props
+    const SortOrderValueList = Object.keys(UserModel.SortOrder)
+      .map(typeName => (UserModel.SortOrder as any)[typeName])
+    const nextValue = SortOrderValueList[(SortOrderValueList.indexOf(sortOrder) + 1) % SortOrderValueList.length]
 
-    changeSortType(target.value as OfferModel.SortType)
-    fetchOffersIfNeeded(true)
+    fetchUsers(sortType, nextValue)
 
-    // ReactDom.findDOMNode(convoyOfferDetailReference).scrollIntoView();
-    if (convoyOfferDetailReference && convoyOfferDetailReference.current) {
-      convoyOfferDetailReference.current.scrollTo(0, 0)
+    if (epicUserDetailReference && epicUserDetailReference.current) {
+      epicUserDetailReference.current.scrollTo(0, 0)
     }
   }
 
-  handleClickOnButton() {
-    const { changeSortOrder, fetchOffersIfNeeded, sortOrder, convoyOfferDetailReference } = this.props
-    const SortOrderValueList = Object.keys(OfferModel.SortOrder)
-      .map(typeName => (OfferModel.SortOrder as any)[typeName])
-    const nextValue = SortOrderValueList[(SortOrderValueList.indexOf(sortOrder) + 1) % SortOrderValueList.length]
-
-    changeSortOrder(nextValue)
-    fetchOffersIfNeeded(true)
-
-    if (convoyOfferDetailReference && convoyOfferDetailReference.current) {
-      convoyOfferDetailReference.current.scrollTo(0, 0)
-    }
+  getSortTypeLowerCase(type: UserModel.SortType) {
+    return UserModel.SortType[type].toLowerCase()
   }
 
   render() {
     const { sortOrder, sortType } = this.props
 
-    const dropdownOptions = Object.keys(OfferModel.SortType).map(typeName => {
-      return ({
-        id: typeName,
-        value: (OfferModel.SortType as any)[typeName]
-      })
-    })
-
     return (
       <div className='sort-container'>
-        <span className='sort-type-dropdown-prefix'>
-          {`Sort by: `}
-        </span>
-        <select
-          className='sort-type-dropdown'
-          value={sortType}
-          onChange={event => this.handleClickOnDropdown(event.target)}>
+        <div className='sort-content'>
           {
-            dropdownOptions.map(option =>
-              <option
-                key={option.id}
-                value={option.value}>
-                {option.value}
-              </option>
-            )
+            (Object.keys(UserModel.SortType) as UserModel.SortType[]).map(type => {
+              return (
+                <div
+                  key={this.getSortTypeLowerCase(type)}
+                  className={`sort-type-user-item-${this.getSortTypeLowerCase(type)}`}
+                  onClick={() => this.handleClickOnSortItem(type)}
+                >
+                  <span className='sort-item-type'>
+                    {UserModel.SortTypeDisplay[type]}
+                  </span>
+                  <span className='sort-item-order'>
+                    {
+                      type === sortType ?
+                        (sortOrder === UserModel.SortOrder.Ascending ? '⇧' : '⇩') :
+                        ' '
+                    }
+                  </span>
+                </div>
+              )
+            })
           }
-        </select>
-        <button onClick={() => this.handleClickOnButton()}>
-          {sortOrder === OfferModel.SortOrder.Ascending ? '⇧' : '⇩'}
-        </button>
+        </div>
       </div>
     )
   }

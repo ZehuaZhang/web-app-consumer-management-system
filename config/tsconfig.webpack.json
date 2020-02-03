@@ -1,9 +1,18 @@
 {
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"sourceMap": true
+		"sourceMap": true,
+		"baseUrl": "../src",
+		"paths": {
+			"client/*": [
+				"./client/*"
+			],
+			"server/*": [
+				"./server/*"
+			]
+		}
 	},
 	"exclude": [
 		"src/server"
-	]	  
+	]
 }

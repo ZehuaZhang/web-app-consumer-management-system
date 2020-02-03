@@ -1,30 +1,30 @@
-.convoy-offer-container {
+.epic-user-container {
     margin: 60px auto 141px auto;
 
-    .convoy-offer {
+    .epic-user {
         padding: 30px 42px;
     }
 }
 
-.convoy-offer-detailed-container-wrapper {
+.epic-user-detailed-container-wrapper {
     height: 100%;
     width: 100%;
     overflow: hidden;
 
-    .convoy-offer-detailed-container {
+    .epic-user-detailed-container {
         width: calc(100% + 14px);
         overflow: hidden scroll;
         padding-right: 15px;
         max-height: calc(100vh - 305px);
 
-        .convoy-offer-gallery-container {
+        .epic-user-gallery-container {
             background: #FFFFFF;
             border-radius: 4px;
             margin: auto;
             max-width: 1000px;
         }
 
-        .convoy-offer-show-more-button {    
+        .epic-user-show-more-button {    
             margin: 20px auto 10px auto;
             background: #848E93;
             border-radius: 4px;

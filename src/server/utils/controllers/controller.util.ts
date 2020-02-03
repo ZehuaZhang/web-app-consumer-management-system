@@ -5,6 +5,7 @@
 import { inspect } from 'util'
 import { Response } from 'express'
 import { isArray, isString } from '../object.util'
+import { ResponseError } from 'server/interfaces/controller.interface'
 
 export function respondOnSuccess(status: number, data: any, res: Response) {
   res.status(status).send(data)
@@ -30,16 +31,11 @@ function getStatusFromError(error: any): number {
 }
 
 function getErrorResponseFromError(error: any) {
-  const response = {
-    error: 'Unknown Error'
-  }
-
-  if (error && error.errors) {
-    response.error = error.errors
-  } else if (isString(error)) {
-    response.error = error
-  } else {
-    response.error = inspect(error)
+  const detailError = error.errors || error || null
+  const response: ResponseError = {
+    message: error.message || 'Unknown Error',
+    stack: isString(error) ? error : inspect(detailError),
+    error: detailError
   }
 
   return response

@@ -1,182 +1,187 @@
-import { get } from 'superagent'
-import { UserModel } from '../models'
-import { State } from '../reducers'
-import { IUserState } from '../reducers/users.reducer'
+import { get, post, delete as deleteRequest } from 'superagent'
+import { I_UserModel, UserModel, UserUpdateData, UserUpdateReducerData } from 'client/models'
+import { State } from 'client/reducers'
+import { IUserState } from 'client/reducers/users.reducer'
+
+interface I_User_UpdateUser_Response {
+  lastmodified: number
+}
 
 export module ActionName {
   export const RequestUsers = 'Request Users'
   export const ReceiveUsers = 'Receive Users'
+  export const UpdateUser = 'Update User'
   export const RevertUsersOnFailedRequests = 'Revert Users on Failed Request'
   export const RetryUserRequest = 'Retry User Request'
-  export const ChangeSortType = 'Change Sort Type'
-  export const ChangeSortOrder = 'Change Sort Order'
+  export const UpdateUserFailed = 'Update User Failed'
 }
 
 namespace Constants {
-  export const LimitApiQuery = 3
-  export const Endpoint = `https://convoy-mock-api.herokuapp.com/offers?`
+  export const maxRetryCount = 3
+  export const LimitApiQuery = 10
+  export const UserEndpoint = `http://localhost:4000/api/users?limit=${LimitApiQuery}`
+  export const SearchEndpoint = `http://localhost:4000/api/search?limit=${LimitApiQuery}`
+  export const UpdateUserEndpoint = `http://localhost:4000/api/users/`
 }
 
 export interface IAction {
   type: string
   [actionItemName: string]: any
-  // to be enriched
 }
 
 function requestUsers(sortType: UserModel.SortType, sortOrder: UserModel.SortOrder) {
-  const requestStatus = UserModel.RequestStatus.Loading
   return {
     type: ActionName.RequestUsers,
     sortType,
     sortOrder,
-    requestStatus
+    requestStatus: UserModel.RequestStatus.Loading
   }
 }
 
-function receiveUsers(newItems: UserModel[], items: UserModel[], offset: number) {
-  const completeUserItems = transformUsers(items.concat(newItems))
-  const requestStatus = UserModel.RequestStatus.Completed
-
+function receiveUsers(newItems: I_UserModel[], items: I_UserModel[], offset: number) {
   return {
     type: ActionName.ReceiveUsers,
-    items: completeUserItems,
+    items: items.concat(newItems),
     offset,
     receivedAt: Date.now(),
-    requestStatus
+    requestStatus: UserModel.RequestStatus.Completed
   }
 }
 
-function transformUsers(items: OfferModel[]) {
-  const set = new Set()
-
-  return (items || []).filter(item => {
-    if (set.has(item.offer)) {
-      return false
-    }
-
-    set.add(item.offer)
-    return true
-  })
+function updateUser(id: number, updateBody: UserUpdateReducerData) {
+  return {
+    type: ActionName.UpdateUser,
+    id,
+    updateBody,
+    receivedAt: Date.now(),
+    requestStatus: UserModel.RequestStatus.Completed
+  }
 }
 
-function revertOffersOnFailedRequests(sortType: OfferModel.SortType, sortOrder: OfferModel.SortOrder) {
-  const requestStatus = OfferModel.RequestStatus.Failed
+function revertUsersOnFailedRequests(sortType: UserModel.SortType, sortOrder: UserModel.SortOrder) {
   return {
-    type: ActionName.RevertOffersOnFailedRequests,
+    type: ActionName.RevertUsersOnFailedRequests,
     sortType,
     sortOrder,
-    requestStatus
+    requestStatus: UserModel.RequestStatus.Failed
   }
 }
 
-function retryOfferRequest() {
-  const requestStatus = OfferModel.RequestStatus.Retrying
+function updateUserFailed() {
   return {
-    type: ActionName.RetryOfferRequest,
-    requestStatus
+    type: ActionName.UpdateUserFailed,
+    requestStatus: UserModel.RequestStatus.Failed
   }
 }
 
-export function changeSortType(sortType: OfferModel.SortType) {
+function retryUserRequest() {
   return {
-    type: ActionName.ChangeSortType,
-    sortType
+    type: ActionName.RetryUserRequest,
+    requestStatus: UserModel.RequestStatus.Retrying
   }
 }
 
-export function changeSortOrder(sortOrder: OfferModel.SortOrder) {
-  return {
-    type: ActionName.ChangeSortOrder,
-    sortOrder
-  }
-}
-
-function fetchOffers(sortType: OfferModel.SortType, sortOrder: OfferModel.SortOrder) {
+export function fetchUsers(sortType?: UserModel.SortType, sortOrder?: UserModel.SortOrder) {
   return (dispatch: Function, getState: () => State) => {
-    const { sortType: prevSortType, sortOrder: prevSortOrder } = getState().offers
+    const { sortType: prevSortType, sortOrder: prevSortOrder } = getState().users
+    const { term } = getState().search
 
-    dispatch(requestOffers(sortType, sortOrder))
+    sortType = sortType || prevSortType
+    sortOrder = sortOrder || prevSortOrder
+
+    dispatch(requestUsers(sortType, sortOrder))
     const endpoint = [
-      Constants.Endpoint,
-      `limit=${Constants.LimitApiQuery}`,
-      `sort=${OfferModel.SortTypeToSortApiQuery[sortType]}`,
-      `order=${OfferModel.SortOrderToOrderApiQuery[sortOrder]}`
-    ].join('&')
+      term ? Constants.SearchEndpoint : Constants.UserEndpoint,
+      `sort=${UserModel.SortTypeToSortApiQuery[sortType]}`,
+      `order=${UserModel.SortOrderToOrderApiQuery[sortOrder]}`
+    ]
+      .concat(term ? [`term=${term}`] : [])
+      .join('&')
 
     return get(endpoint)
-      .retry(3, () => dispatch(retryOfferRequest()))
+      .retry(Constants.maxRetryCount, () => dispatch(retryUserRequest()))
       .then(response => {
-        dispatch(receiveOffers(
+        dispatch(receiveUsers(
           response.body,
           [],
           Constants.LimitApiQuery))
-
-          fetchExtraUniqueOffers(getState(), dispatch, 0)
       })
       .catch(error => {
-        console.error('Error on fetchOffers', error)
-        dispatch(revertOffersOnFailedRequests(prevSortType, prevSortOrder))
+        console.error('Error on fetchUsers', error)
+        dispatch(revertUsersOnFailedRequests(prevSortType, prevSortOrder))
       })
   }
 }
 
-function fetchExtraUniqueOffers(state: State, dispatch: Function, originalLength: number) {
-  const lengthDifference = state.offers.items.length - originalLength
-  if (lengthDifference < Constants.LimitApiQuery) {
-    const nextLimitApiQuery = Constants.LimitApiQuery - lengthDifference
-    dispatch(fetchNextOffers(originalLength, nextLimitApiQuery))
-  }
-}
-
-export function fetchNextOffers(originalLength: number, limit = Constants.LimitApiQuery) {
+export function fetchNextUsers() {
   return (dispatch: Function, getState: () => State) => {
-    const { sortType, sortOrder, offset } = getState().offers
+    const { sortType, sortOrder, offset } = getState().users
+    const { term } = getState().search
 
-    dispatch(requestOffers(sortType, sortOrder))
+    dispatch(requestUsers(sortType, sortOrder))
 
     const endpoint = [
-      Constants.Endpoint,
-      `limit=${limit}`,
-      `sort=${OfferModel.SortTypeToSortApiQuery[sortType]}`,
-      `order=${OfferModel.SortOrderToOrderApiQuery[sortOrder]}`,
+      term ? Constants.SearchEndpoint : Constants.UserEndpoint,
+      `sort=${UserModel.SortTypeToSortApiQuery[sortType]}`,
+      `order=${UserModel.SortOrderToOrderApiQuery[sortOrder]}`,
       `offset=${offset}`
-    ].join('&')
+    ]
+      .concat(term ? [`term=${term}`] : [])
+      .join('&')
 
     return get(endpoint)
-      .retry(3, () => dispatch(retryOfferRequest()))
+      .retry(Constants.maxRetryCount, () => dispatch(retryUserRequest()))
       .then(response => {
-        const items = getState().offers.items || []
+        const items = getState().users.items || []
 
-        dispatch(receiveOffers(
+        dispatch(receiveUsers(
           response.body,
           items,
-          getState().offers.offset + limit))
-
-          fetchExtraUniqueOffers(getState(), dispatch, originalLength)
+          offset + Constants.LimitApiQuery))
       })
       .catch(error => {
-        console.error('Error on fetchNextOffers', error)
-        dispatch(revertOffersOnFailedRequests(sortType, sortOrder))
+        console.error('Error on fetchNextUsers', error)
+        dispatch(revertUsersOnFailedRequests(sortType, sortOrder))
       })
   }
 }
 
-function shouldFetchOffers(state: IOfferState, shouldForceUpdate: boolean) {
+export function fetchUpdateUser(id: number, updateBody: UserUpdateData) {
+  return (dispatch: Function, getState: () => State) => {
+    const endpoint = Constants.UpdateUserEndpoint + id
+
+    return post(endpoint)
+      .send({ ...updateBody })
+      .retry(Constants.maxRetryCount, () => dispatch(retryUserRequest()))
+      .then(response => {
+        const { lastmodified } = response.body as I_User_UpdateUser_Response
+        dispatch(updateUser(id, { ...updateBody, lastmodified }))
+      })
+      .catch(error => {
+        const { message } = error.response.body
+        console.error('Error on fetchUpdateUser', error.response.body)
+        dispatch(updateUserFailed())
+        throw message
+      })
+  }
+}
+
+function shouldFetchUsers(state: IUserState, shouldForceUpdate: boolean) {
   if (shouldForceUpdate) {
     return true
   }
   const { requestStatus, items } = state
   return (
-    requestStatus !== OfferModel.RequestStatus.Loading &&
+    requestStatus !== UserModel.RequestStatus.Loading &&
     items.length < Constants.LimitApiQuery
   )
 }
 
-export function fetchOffersIfNeeded(shouldForceUpdate: boolean) {
+function fetchUsersIfNeeded(shouldForceUpdate: boolean) {
   return (dispatch: Function, getState: () => State) => {
-    if (shouldFetchOffers(getState().offers, shouldForceUpdate)) {
-      const { sortType, sortOrder } = getState().offers
-      return dispatch(fetchOffers(sortType, sortOrder))
+    if (shouldFetchUsers(getState().users, shouldForceUpdate)) {
+      const { sortType, sortOrder } = getState().users
+      return dispatch(fetchUsers(sortType, sortOrder))
     }
   }
 }

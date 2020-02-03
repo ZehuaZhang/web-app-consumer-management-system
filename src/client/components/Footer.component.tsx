@@ -8,8 +8,8 @@ export namespace Footer {
 export class Footer extends React.Component<Footer.Props> {
   render() {
     return (
-      <div className="convoy-footer-container">
-        <div className="convoy-footer-title">
+      <div className="epic-footer-container">
+        <div className="epic-footer-title">
           .zZehua's Homework
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
   getModelInputFromAddUserRequest,
   getModelInputFromUpdateUserRequest
 } from 'server/utils/controllers/user.util'
-import { I_User } from 'server/interfaces/user.interface'
+import { I_User, I_User_UpdateUser_Response } from 'server/interfaces/user.interface'
 
 export class UserController {
   private model: UserModel
@@ -55,9 +55,11 @@ export class UserController {
     const input = getModelInputFromUpdateUserRequest(req)
 
     this.model.updateUser(input)
-      .then((response: any) => {
+      .then((response: I_User_UpdateUser_Response) => {
         respondOnSuccess(OK, response, res)
       })
-      .catch(error => respondOnError(BAD_REQUEST, error, res))
+      .catch(error => {
+        respondOnError(BAD_REQUEST, error, res)
+      })
   }
 }

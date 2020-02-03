@@ -1,78 +1,69 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { toggleApplication } from '../actions/jobs.action'
-import { fetchOffersIfNeeded, fetchNextOffers, changeSortOrder, changeSortType } from '../actions/users.action'
-import { fetchApplications } from '../actions/jobs.action'
-import { OfferItem, Sort, Status } from '../components'
-import { OfferModel } from '../models'
-import { IJobState } from '../reducers/jobs.reducer'
-import { IOfferState } from '../reducers/users.reducer'
-import { State } from '../reducers'
+import { fetchUsers, fetchNextUsers, fetchUpdateUser } from 'client/actions/users.action'
+import { changeSearchTerm } from 'client/actions/search.action'
+import { UserItem, Sort, Status } from 'client/components'
+import { UserModel, UserUpdateData } from 'client/models'
+import { IUserState } from 'client/reducers/users.reducer'
+import { State } from 'client/reducers'
+import { ISearchState } from 'client/reducers/search.reducer'
 
-export namespace Offers {
+export namespace Users {
   export interface Props {
-    jobs: IJobState
-    offers: IOfferState
-    toggleApplication: (offerId: number) => void
-    fetchOffersIfNeeded: (shouldForceUpdate?: boolean) => void
-    fetchApplications: () => void
-    fetchNextOffers: (originalLength: number) => void
-    changeSortOrder: (sortOrder: OfferModel.SortOrder) => void
-    changeSortType: (sortType: OfferModel.SortType) => void
+    users: IUserState,
+    search: ISearchState
+    fetchUsers: (sortType?: UserModel.SortType, sortOrder?: UserModel.SortOrder) => void
+    fetchNextUsers: () => void,
+    changeSearchTerm: (term: string) => void,
+    fetchUpdateUser: (id: number, updateBody: UserUpdateData) => Promise<void>
   }
 }
 
-class Offers extends React.Component<Offers.Props> {
-  private convoyOfferDetailReference: React.RefObject<HTMLDivElement>
+class Users extends React.Component<Users.Props> {
+  private epicUserDetailReference: React.RefObject<HTMLDivElement>
 
-  constructor(props: Offers.Props) {
+  constructor(props: Users.Props) {
     super(props)
 
-    this.convoyOfferDetailReference = React.createRef()
+    this.epicUserDetailReference = React.createRef()
   }
 
   componentDidMount() {
-    const { fetchOffersIfNeeded, fetchApplications } = this.props
-    fetchOffersIfNeeded()
-    fetchApplications()
+    const { fetchUsers } = this.props
+    fetchUsers()
   }
 
   handleClickOnShowMore() {
-    const { fetchNextOffers, offers } = this.props
-    fetchNextOffers(offers.items.length)
+    const { fetchNextUsers } = this.props
+    fetchNextUsers()
   }
 
   render() {
-    const {
-      jobs, offers,
-      toggleApplication, changeSortOrder, changeSortType, fetchOffersIfNeeded } = this.props
-    const { sortType, sortOrder, receivedAt, requestStatus, } = offers
+    const { users, fetchUsers, fetchUpdateUser } = this.props
+    const { sortType, sortOrder, receivedAt, requestStatus, } = users
     return (
-      <div className="convoy-offer-container">
-        <div className="convoy-offer">
+      <div className="epic-user-container">
+        <div className="epic-user">
           <Sort
-            changeSortOrder={changeSortOrder}
-            changeSortType={changeSortType}
-            fetchOffersIfNeeded={fetchOffersIfNeeded}
+            fetchUsers={fetchUsers}
             sortOrder={sortOrder}
             sortType={sortType}
-            convoyOfferDetailReference={this.convoyOfferDetailReference}
+            epicUserDetailReference={this.epicUserDetailReference}
           />
-          <div className='convoy-offer-detailed-container-wrapper' >
-            <div className='convoy-offer-detailed-container' ref={this.convoyOfferDetailReference}>
-              <div className='convoy-offer-gallery-container'>
+          <div className='epic-user-detailed-container-wrapper' >
+            <div className='epic-user-detailed-container' ref={this.epicUserDetailReference}>
+              <div className='epic-user-gallery-container'>
                 {
-                  offers.items.map(offer =>
-                    <OfferItem
-                      offer={offer}
-                      key={offer.offer}
-                      toggleApplication={toggleApplication}
-                      isRequested={jobs.includes(offer.offer)}
+                  users.items.map(user =>
+                    <UserItem
+                      user={user}
+                      key={user.id}
+                      fetchUpdateUser={fetchUpdateUser}
                     />
                   )
                 }
               </div>
-              <button className="convoy-offer-show-more-button" onClick={() => this.handleClickOnShowMore()}>
+              <button className="epic-user-show-more-button" onClick={() => this.handleClickOnShowMore()}>
                 Show More
               </button>
               <Status
@@ -88,23 +79,21 @@ class Offers extends React.Component<Offers.Props> {
 }
 
 const mapStateToProps = (state: State) => {
-  const { offers, jobs } = state
+  const { users, search } = state
   return {
-    offers,
-    jobs
+    users,
+    search
   }
 }
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  toggleApplication: (offerId: number) => dispatch(toggleApplication(offerId)),
-  fetchOffersIfNeeded: (shouldForceUpdate = false) => dispatch(fetchOffersIfNeeded(shouldForceUpdate)),
-  fetchApplications: () => dispatch(fetchApplications()),
-  fetchNextOffers: (originalLength: number) => dispatch(fetchNextOffers(originalLength)),
-  changeSortOrder: (sortOrder: OfferModel.SortOrder) => dispatch(changeSortOrder(sortOrder)),
-  changeSortType: (sortType: OfferModel.SortType) => dispatch(changeSortType(sortType))
+  fetchUsers: (sortType?: UserModel.SortType, sortOrder?: UserModel.SortOrder) => dispatch(fetchUsers(sortType, sortOrder)),
+  fetchNextUsers: () => dispatch(fetchNextUsers()),
+  changeSearchTerm: (term: string) => dispatch(changeSearchTerm(term)),
+  fetchUpdateUser: (id: number, updateBody: UserUpdateData) => dispatch(fetchUpdateUser(id, updateBody))
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Offers)
+)(Users)

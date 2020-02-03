@@ -1,0 +1,44 @@
+.user-item-container {
+    border: 1px solid #D6DADC;
+    border-radius: 4px;
+    height: 40px;
+    padding: 20px;
+
+    &:focus, &:hover {
+        transition: 0.2s;
+        box-shadow: 0 0px 7px -2px rgba(0,0,0,0.5);                
+    }
+
+    .user-item-title {
+        font-family: ProximaNova-Regular;
+        font-size: 14px;
+        color: #FFFFFF;
+        letter-spacing: 0.35px;
+        line-height: 23px;
+        background: #14A9E6;
+        width: 97px;
+        height: 24px;
+        text-align: center;
+    }
+
+    .user-item-content {
+        margin-top: 10px;
+        display: table;
+        width: 100%;
+
+        div, input {
+            display: table-cell;
+            text-align: center;
+            width: 21%;
+            overflow: hidden;
+        }
+
+        .user-item-id {
+            width: 4%;
+        }
+
+        .user-item-dateofbirth {
+            width: 12%;
+        }
+    }
+}

@@ -40,7 +40,7 @@ export function getModelInputFromAddUserRequest(req: Request): I_User_AddUser_Mo
   return ({
     username: username.trim(),
     email: email.trim(),
-    dateofbirth: dateofbirth.trim(),
+    dateofbirth: parseInt(dateofbirth as any),
     balance: parseInt(balance as any)
   })
 }
@@ -51,6 +51,14 @@ export function getModelInputFromUpdateUserRequest(req: Request): I_User_UpdateU
 
   if (!id) {
     throw "invalid id"
+  }
+
+  if (body.username) {
+    body.username = body.username.trim()
+  }
+  
+  if (body.email) {
+    body.email = body.email.trim()
   }
 
   if (body.balance) {

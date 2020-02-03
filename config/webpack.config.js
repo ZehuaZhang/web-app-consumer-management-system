@@ -1,16 +1,17 @@
-var webpack = require('webpack')
-var path = require('path')
-var package = require('../package.json')
+const webpack = require('webpack')
+const path = require('path')
+const package = require('../package.json')
 
 // variables
-var isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
-var sourcePath = path.join(__dirname, '../src/client')
-var outPath = path.join(__dirname, '../build/client')
+const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
+const sourcePath = path.join(__dirname, '../src/client')
+const outPath = path.join(__dirname, '../build/client')
 
 // plugins
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
-var CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
 module.exports = {
   context: sourcePath,
@@ -28,7 +29,10 @@ module.exports = {
     mainFields: ['module', 'browser', 'main'],
     alias: {
       app: path.resolve(__dirname, '../src/client/')
-    }
+    },
+    plugins: [
+      new TsconfigPathsPlugin({ configFile: path.resolve(__dirname, './tsconfig.webpack.json') })
+    ]
   },
   module: {
     rules: [
@@ -42,10 +46,7 @@ module.exports = {
             }
           },
           {
-            loader: 'ts-loader',
-            options: {
-              configFile: path.resolve(__dirname, 'tsconfig.webpack.json')
-            }
+            loader: 'ts-loader'
           }
         ].filter(Boolean)
       },

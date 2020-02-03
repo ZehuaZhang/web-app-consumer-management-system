@@ -1,4 +1,4 @@
-.convoy-header-container {
+.epic-header-container {
     height: 56px;
     background: white;
     position: absolute;
@@ -6,16 +6,16 @@
     z-index: 1000;
     width: 100%;
 
-    .convoy-header {
+    .epic-header {
         margin: auto;
         max-width: 1000px;
 
-        .convoy-header-title {
+        .epic-header-title {
             display: inline-block;
             margin: 20px 41px;
 
-            .convoy-navigation-header.logo {
-                background-image: url(../../assets/images/Convoy_logo-white.svg);
+            .epic-navigation-header.logo {
+                background-image: url(../../assets/images/Epic_logo-white.svg);
                 background-size: 111px 16px;
                 display: block;
                 width: 111px;
@@ -25,12 +25,12 @@
             }
         }
 
-        .convoy-navigation-container {
+        .epic-navigation-container {
             display: inline-block;
             height: 52px;
             vertical-align: top;
 
-            .convoy-navigation-item {
+            .epic-navigation-item {
                 display: inline-block;
                 height: 52px;
                 width: 93px;
@@ -47,7 +47,7 @@
                     border-bottom: 4px solid rgba(246,83,53,1);
                 }
 
-                &.offer {
+                &.user {
                     margin-right: 5px;
                 }
 

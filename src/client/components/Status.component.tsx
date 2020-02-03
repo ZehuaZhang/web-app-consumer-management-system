@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { OfferModel } from '../models'
+import { UserModel } from '../models'
 import { dateUtil } from '../utils'
 
 export namespace Status {
   export interface Props {
     receivedAt: string,
-    requestStatus: OfferModel.RequestStatus
+    requestStatus: UserModel.RequestStatus
   }
 }
 
@@ -15,13 +15,13 @@ export class Status extends React.Component<Status.Props> {
 
     const getImageClassName = () => {
       switch (requestStatus) {
-        case OfferModel.RequestStatus.Completed:
+        case UserModel.RequestStatus.Completed:
           return 'status-image-completed'
-        case OfferModel.RequestStatus.Loading:
+        case UserModel.RequestStatus.Loading:
           return 'status-image-loading'
-        case OfferModel.RequestStatus.Retrying:
+        case UserModel.RequestStatus.Retrying:
           return 'status-image-retrying'
-        case OfferModel.RequestStatus.Failed:
+        case UserModel.RequestStatus.Failed:
           return 'status-image-failed'
         default:
           return 'status-iamge-na'
@@ -34,7 +34,7 @@ export class Status extends React.Component<Status.Props> {
           receivedAt &&
           <div>
             <span className={getImageClassName()} />
-            {dateUtil.getLocaleStringFromEpochTime(parseInt(receivedAt))}
+            {dateUtil.formatDate(receivedAt, 'llll')}
           </div>
         }
       </div>

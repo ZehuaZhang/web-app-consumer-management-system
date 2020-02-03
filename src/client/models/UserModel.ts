@@ -1,41 +1,49 @@
-export interface UserModel {
-  offer: number,
-  miles: number,
-  origin: {
-    city: string,
-    state: string,
-    pickup: {
-      start: string
-      end: string
-    }
-  },
-  destination: {
-    city: string,
-    state: string,
-    dropoff: {
-      start: string,
-      end: string
-    }
-  }
+export interface I_UserModel {
+  id: number,
+  username: string,
+  dateofbirth: number,
+  email: string,
+  balance: number,
+  lastmodified: number
+}
+
+export interface UserUpdateData {
+  username?: string,
+  dateofbirth?: number,
+  email?: string,
+  balance?: number
+}
+
+export interface UserUpdateReducerData extends UserUpdateData {
+  lastmodified: number
 }
 
 export namespace UserModel {
   export enum SortType {
-    PickupDate = 'Pickup Date',
-    DropoffDate = 'Dropoff Date',
-    Price = 'Price',
-    Orgin = 'Origin',
-    Destination = 'Destination',
-    Miles = 'Miles'
+    ID = 'ID',
+    UserName = 'UserName',
+    Email = 'Email',
+    DateOfBirth = 'DateOfBirth',
+    Balance = 'Balance',
+    LastModified = 'LastModified'
+  }
+
+  export enum SortTypeDisplay {
+    ID = 'ID',
+    UserName = 'User Name',
+    Email = 'Email',
+    DateOfBirth = 'Date Of Birth',
+    Balance = 'Balance',
+    LastModified = 'Last Modified'
   }
 
   export const SortTypeToSortApiQuery = {
-    [SortType.PickupDate]: 'pickupDate',
-    [SortType.DropoffDate]: 'dropoffDate',
-    [SortType.Price]: 'price',
-    [SortType.Orgin]: 'origin',
-    [SortType.Destination]: 'destination',
-    [SortType.Miles]: 'miles'
+    [SortType.ID]: 'id',
+    [SortType.UserName]: 'username',
+    [SortType.DateOfBirth]: 'dateofbirth',
+    [SortType.Email]: 'email',
+    [SortType.LastModified]: 'lastmodified',
+    [SortType.Balance]: 'balance'
   }
 
   export enum SortOrder {
@@ -44,8 +52,8 @@ export namespace UserModel {
   }
 
   export const SortOrderToOrderApiQuery = {
-    [SortOrder.Ascending]: 'asc',
-    [SortOrder.Descending]: 'desc'
+    [SortOrder.Ascending]: 'ascending',
+    [SortOrder.Descending]: 'descending'
   }
 
   export enum RequestStatus {

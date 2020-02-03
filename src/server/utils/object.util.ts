@@ -41,13 +41,9 @@ export function isEmptyObject(item: any): boolean {
 }
 
 export function swap<T>(itemA: T, itemB: T) {
-  console.log(itemB, itemA)
-
   const temp = itemA
   itemA = itemB
   itemB = temp
-
-  console.log(itemA, itemB)
 
   return {
     itemA,

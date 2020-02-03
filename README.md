@@ -1,10 +1,10 @@
-# Convoy Frontend
+# Epic Frontend
 
-Designed Convoy Offer and My Job Page
+Designed Epic User and My Job Page
 
-For applications, clicking an offer or a job directly applied to, or cancelled from My Jobs, since we don't really have api to call. Applications persist when reopeninig the browser via local storage.
+For applications, clicking an user or a job directly applied to, or cancelled from My Jobs, since we don't really have api to call. Applications persist when reopeninig the browser via local storage.
 
-Offer fetch count is guaranteed to be exact 3 offers for following 3 cases, i.e. initial rendering, clicking Show More, & choosing Sorting Type. Offer fetch would retry 3 times when server errors occur. Fetch status are added to Footer to show status of the fetch, i.e. Not Started, Loading, Retrying, Completed, Failed.
+User fetch count is guaranteed to be exact 3 users for following 3 cases, i.e. initial rendering, clicking Show More, & choosing Sorting Type. User fetch would retry 3 times when server errors occur. Fetch status are added to Footer to show status of the fetch, i.e. Not Started, Loading, Retrying, Completed, Failed.
 
 Main app is designed with hidden scroll bar, and would scroll to top when a new sorting, i.e. either sort type or sort order is clicked. Animations and transitions added on all user interactions. Header, Footer, 2 Sortings components are sticky.
 
